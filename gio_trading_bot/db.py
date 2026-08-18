@@ -102,6 +102,52 @@ def increment_usage(user_id: int):
         c.commit()
 
 
+def set_lang(user_id: int, lang: str):
+    with _conn() as c:
+        c.execute("UPDATE users SET lang=? WHERE user_id=?", (lang, user_id))
+        c.commit()
+
+
+# ========== api keys (per-user, for Binance / Etherscan) ==========
+
+def init_keys_table():
+    with _conn() as c:
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS user_keys (
+            user_id INTEGER NOT NULL,
+            key_name TEXT NOT NULL,
+            key_value TEXT NOT NULL,
+            created_at INTEGER DEFAULT (strftime('%s','now')),
+            UNIQUE(user_id, key_name)
+        )
+        """)
+
+
+def save_api_key(user_id: int, name: str, value: str, encrypted: bool = False):
+    init_keys_table()
+    with _conn() as c:
+        c.execute(
+            "INSERT OR REPLACE INTO user_keys(user_id, key_name, key_value) VALUES(?,?,?)",
+            (user_id, name, value))
+        c.commit()
+
+
+def get_api_key(user_id: int, name: str):
+    init_keys_table()
+    with _conn() as c:
+        row = c.execute(
+            "SELECT key_value FROM user_keys WHERE user_id=? AND key_name=?",
+            (user_id, name)).fetchone()
+        return row["key_value"] if row else None
+
+
+def delete_api_key(user_id: int, name: str):
+    init_keys_table()
+    with _conn() as c:
+        c.execute("DELETE FROM user_keys WHERE user_id=? AND key_name=?", (user_id, name))
+        c.commit()
+
+
 # ========== watchlist ==========
 
 def add_watch(user_id: int, symbol: str, chain: str = "eth") -> bool:
