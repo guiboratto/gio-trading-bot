@@ -132,9 +132,12 @@ async function loadSignals() {
   const el = document.getElementById('signals');
   if (d.note) { el.innerHTML = `<div class="card small">${d.note}</div>`; return; }
   if (!d.signals?.length) { el.innerHTML = '<div class="card small">No active signals</div>'; return; }
-  el.innerHTML = d.signals.slice(0, 8).map(s =>
-    `<div class="signal"><strong>${s.token}</strong> · ${s.n_buyers} whales · PnL $${Math.round(s.total_pnl_usd).toLocaleString()}</div>`
-  ).join('');
+  const sentiment = d.sentiment && d.sentiment.value ? ` · Fear&Greed: <b>${d.sentiment.value}</b> (${d.sentiment.classification})` : '';
+  el.innerHTML = d.signals.slice(0, 8).map(s => {
+    const usd = Math.round(s.amount_usd || 0).toLocaleString();
+    const extra = s.change_pct ? ` <span class="small">(${s.change_pct.toFixed(1)}%)</span>` : '';
+    return `<div class="signal"><strong>${s.asset || '?'}</strong> · ${s.source} · ${s.direction} · $${usd}${extra}</div>`;
+  }).join('') + `<div class="small" style="margin-top:8px">${sentiment}</div>`;
 }
 
 async function loadPortfolio() {
