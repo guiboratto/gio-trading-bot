@@ -14,7 +14,7 @@ from telegram.ext import (
     CallbackQueryHandler, ConversationHandler, filters, ContextTypes,
 )
 from .advisor import Advisor
-from .market_data import coingecko, debank as md_debank, archam as md_archam
+from .market_data import coingecko
 from . import archam, debank as db_debank, whales
 from .db import init_db, get_user, set_user_tier, increment_usage, save_history
 
@@ -304,7 +304,7 @@ async def _analyze(update, ctx, is_followup=False):
     msg = update.message or update.callback_query.message
     await msg.reply_text(f"Fetching data for {asset}...")
     cg = await coingecko(asset)
-    ar = await md_archam(asset)
+    ar = await archam.wallet_pnl(asset)
     payload = {
         "strategy": d.get("strategy"), "asset": asset,
         "horizon": d.get("horizon"), "entry": d.get("entry"),
