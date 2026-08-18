@@ -1,0 +1,57 @@
+INFO:     Started server process [830825]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33930 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:33944 - "GET / HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://pro-api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:33952 - "GET /api/price/BTC HTTP/1.1" 200 OK
+WARNING:gio.whales:Archam whales error: ARCHAM_API_KEY not set
+INFO:     127.0.0.1:33956 - "GET /api/signals HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33930 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:33972 - "GET /api/portfolio?uid=123 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50442 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:50442 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:50442 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:httpx:HTTP Request: GET https://pro-api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:51790 - "GET /api/price/BTC HTTP/1.1" 200 OK
+WARNING:gio.whales:Archam whales error: ARCHAM_API_KEY not set
+INFO:     127.0.0.1:51798 - "GET /api/signals HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51812 - "GET /api/portfolio?uid=123 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50442 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:50442 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:34652 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:34652 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:httpx:HTTP Request: GET https://pro-api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:57184 - "GET /api/price/BTC HTTP/1.1" 200 OK
+WARNING:gio.whales:Archam whales error: ARCHAM_API_KEY not set
+INFO:     127.0.0.1:57200 - "GET /api/signals HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57206 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34652 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:34652 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:45394 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:45394 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:httpx:HTTP Request: GET https://pro-api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:49330 - "GET /api/price/BTC HTTP/1.1" 200 OK
+WARNING:gio.whales:Archam whales error: ARCHAM_API_KEY not set
+INFO:     127.0.0.1:49344 - "GET /api/signals HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49354 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:35692 - "GET /api/portfolio?uid=123 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49328 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:43486 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:43486 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:43486 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:56804 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:56804 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:56804 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:50422 - "HEAD / HTTP/1.1" 405 Method Not Allowed

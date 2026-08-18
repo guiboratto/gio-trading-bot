@@ -1,14 +1,27 @@
-/home/guiboratto/projects/gio-trading-bot/gio_trading_bot/bot.py:37: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
-  conv = ConversationHandler(
-2026-08-18 21:20:15,800 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-08-18 21:20:15,800 INFO gio: Bot starting...
-2026-08-18 21:20:15,951 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getMe "HTTP/1.1 200 OK"
-2026-08-18 21:20:15,989 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/deleteWebhook "HTTP/1.1 200 OK"
-2026-08-18 21:20:15,990 INFO apscheduler.scheduler: Added job "_kick_monitor" to job store "default"
-2026-08-18 21:20:15,991 INFO apscheduler.scheduler: Scheduler started
-2026-08-18 21:20:15,991 INFO telegram.ext.Application: Application started
-2026-08-18 21:20:20,804 INFO apscheduler.scheduler: Removed job adc5c54c03334be8ad84ec91b4b8aac9
-2026-08-18 21:20:20,804 INFO apscheduler.executors.default: Running job "_kick_monitor (trigger: date[2026-08-18 18:20:20 UTC], next run at: 2026-08-18 18:20:20 UTC)" (scheduled at 2026-08-18 18:20:20.800122+00:00)
-2026-08-18 21:20:20,804 WARNING gio.whales: Archam whales error: ARCHAM_API_KEY not set
-2026-08-18 21:20:20,804 INFO apscheduler.executors.default: Job "_kick_monitor (trigger: date[2026-08-18 18:20:20 UTC], next run at: 2026-08-18 18:20:20 UTC)" executed successfully
-2026-08-18 21:20:26,136 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:30:06,560 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-08-18 21:30:06,560 INFO gio: Bot starting...
+2026-08-18 21:30:06,707 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getMe "HTTP/1.1 200 OK"
+2026-08-18 21:30:06,745 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/deleteWebhook "HTTP/1.1 200 OK"
+2026-08-18 21:30:06,746 INFO apscheduler.scheduler: Added job "_kick_monitor" to job store "default"
+2026-08-18 21:30:06,746 INFO apscheduler.scheduler: Scheduler started
+2026-08-18 21:30:06,746 INFO telegram.ext.Application: Application started
+2026-08-18 21:30:11,564 INFO apscheduler.scheduler: Removed job f63fc967736847b3a2c83789d9a5f47b
+2026-08-18 21:30:11,564 INFO apscheduler.executors.default: Running job "_kick_monitor (trigger: date[2026-08-18 18:30:11 UTC], next run at: 2026-08-18 18:30:11 UTC)" (scheduled at 2026-08-18 18:30:11.559917+00:00)
+2026-08-18 21:30:11,578 WARNING gio.whales: Archam whales error: ARCHAM_API_KEY not set
+2026-08-18 21:30:11,578 INFO apscheduler.executors.default: Job "_kick_monitor (trigger: date[2026-08-18 18:30:11 UTC], next run at: 2026-08-18 18:30:11 UTC)" executed successfully
+2026-08-18 21:30:16,900 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:30:26,971 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:30:37,034 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:30:47,085 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:30:57,128 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:07,166 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:17,208 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:27,277 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:37,317 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:47,364 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:31:57,404 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:32:07,496 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:32:17,537 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:32:27,575 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:32:37,614 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 21:32:47,653 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"

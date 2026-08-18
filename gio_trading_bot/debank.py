@@ -1,23 +1,16 @@
-"""DeBank API client - real-time wallet tracking.
+"""DeBank API client - kept for Pro tier.
 
-Public API: https://docs.cloud.debank.com/en/readme/api-pro-reference
-Free tier requires login; chains = eth/bsc/polygon/arb/op/base.
+Real-time tracking is done via Etherscan V2 in whales.py (free).
 """
 import os
 import time
 import httpx
-from typing import Optional
 
 BASE = "https://api.debank.com"
 
 
-async def wallet_tx_history(
-    wallet: str, chain: str = "eth", limit: int = 20, days: int = 1
-) -> dict:
-    """Recent transactions for one wallet.
-
-    Note: DeBank free API may require auth header for production.
-    """
+async def wallet_tx_history(wallet: str, chain: str = "eth", limit: int = 20,
+                             days: int = 1) -> dict:
     key = os.environ.get("DEBANK_API_KEY", "")
     headers = {"User-Agent": "gio-whale-tracker/1.0"}
     if key:
@@ -26,12 +19,8 @@ async def wallet_tx_history(
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.get(
                 f"{BASE}/wallet/transaction_history",
-                params={
-                    "id": wallet,
-                    "chain": chain,
-                    "limit": limit,
-                    "start_time": int(time.time()) - days * 86400,
-                },
+                params={"id": wallet, "chain": chain, "limit": limit,
+                        "start_time": int(time.time()) - days * 86400},
                 headers=headers,
             )
             if r.status_code == 200:
@@ -42,7 +31,6 @@ async def wallet_tx_history(
 
 
 async def wallet_net_worth(wallet: str, chain: str = "eth") -> dict:
-    """Net worth + token breakdown."""
     key = os.environ.get("DEBANK_API_KEY", "")
     headers = {"User-Agent": "gio-whale-tracker/1.0"}
     if key:

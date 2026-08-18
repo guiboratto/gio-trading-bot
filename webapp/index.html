@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GIO Trading Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0; padding: 0; background: #0e0f12; color: #e8eaed;
+    }
+    .app { max-width: 720px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    h2 { font-size: 16px; margin: 24px 0 8px; color: #9aa0a6; text-transform: uppercase; letter-spacing: 0.06em; }
+    .card { background: #1a1c20; border-radius: 12px; padding: 14px; margin: 8px 0; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    input, button {
+      font: inherit; padding: 10px 12px; border-radius: 8px; border: 0;
+      background: #2a2d33; color: #e8eaed;
+    }
+    input { flex: 1; min-width: 120px; }
+    button { background: #3a7afe; font-weight: 600; cursor: pointer; }
+    button.secondary { background: #2a2d33; }
+    button.danger { background: #c14b4b; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 6px 8px; text-align: left; }
+    th { color: #9aa0a6; font-weight: 500; border-bottom: 1px solid #2a2d33; }
+    .pos { color: #4caf50; }
+    .neg { color: #ef5350; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; background: #2a2d33; }
+    .pill.buy { background: #1e4a2e; color: #4caf50; }
+    .pill.sell { background: #4a1e1e; color: #ef5350; }
+    .small { font-size: 12px; color: #9aa0a6; }
+    .pnl-big { font-size: 28px; font-weight: 700; }
+    .signal { padding: 8px; border-left: 3px solid #3a7afe; background: #1a1c20; margin: 4px 0; border-radius: 0 8px 8px 0; }
+    .signal strong { color: #4caf50; }
+    .error { color: #ef5350; padding: 8px; }
+    hr { border: 0; border-top: 1px solid #2a2d33; margin: 16px 0; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1>🪙 GIO Trading</h1>
+  <div class="small">Whale signals · Portfolio · Watchlist</div>
+
+  <h2>Signals</h2>
+  <div id="signals"><div class="card small">Loading...</div></div>
+
+  <h2>Portfolio</h2>
+  <div class="card" id="portfolio">
+    <div class="pnl-big" id="pnl-total">$0</div>
+    <div class="small">
+      Realized: <span id="pnl-realized">$0</span> · Unrealized: <span id="pnl-unrealized">$0</span>
+    </div>
+  </div>
+
+  <h2>Watchlist</h2>
+  <div class="card">
+    <div class="row">
+      <input id="watch-input" placeholder="Add token e.g. BTC">
+      <button onclick="addWatch()">+ Add</button>
+    </div>
+    <div id="watch-list" class="small"></div>
+  </div>
+
+  <h2>Trades</h2>
+  <div class="card">
+    <details>
+      <summary>+ New trade</summary>
+      <div class="row" style="margin-top:8px">
+        <input id="tr-symbol" placeholder="BTC" style="flex:0 0 90px">
+        <select id="tr-side" style="padding:10px">
+          <option value="buy">BUY</option>
+          <option value="sell">SELL</option>
+        </select>
+        <input id="tr-entry" placeholder="entry" type="number" step="any">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="tr-size" placeholder="size" type="number" step="any">
+        <input id="tr-stop" placeholder="stop" type="number" step="any">
+        <input id="tr-tp" placeholder="target" type="number" step="any">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button onclick="addTrade()">Open trade</button>
+      </div>
+    </details>
+    <div id="trades-list" class="small"></div>
+  </div>
+
+  <h2>Journal</h2>
+  <div class="card">
+    <details>
+      <summary>+ New note</summary>
+      <div class="row" style="margin-top:8px">
+        <input id="j-symbol" placeholder="BTC" style="flex:0 0 90px">
+        <input id="j-title" placeholder="title">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="j-body" placeholder="body">
+        <button onclick="addJournal()">Save</button>
+      </div>
+    </details>
+    <div id="journal-list" class="small"></div>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+const uid = tg?.initDataUnsafe?.user?.id || parseInt(new URLSearchParams(location.search).get('uid')) || 0;
+tg?.ready();
+tg?.expand();
+
+async function api(path, opts = {}) {
+  const url = new URL(path, location.origin);
+  if (opts.params) Object.entries(opts.params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const r = await fetch(url, { method: opts.method || 'GET', body: opts.body });
+  return r.json();
+}
+
+async function loadAll() {
+  loadSignals();
+  loadPortfolio();
+  loadWatchlist();
+  loadTrades();
+  loadJournal();
+}
+
+async function loadSignals() {
+  const d = await api('/api/signals');
+  const el = document.getElementById('signals');
+  if (d.note) { el.innerHTML = `<div class="card small">${d.note}</div>`; return; }
+  if (!d.signals?.length) { el.innerHTML = '<div class="card small">No active signals</div>'; return; }
+  el.innerHTML = d.signals.slice(0, 8).map(s =>
+    `<div class="signal"><strong>${s.token}</strong> · ${s.n_buyers} whales · PnL $${Math.round(s.total_pnl_usd).toLocaleString()}</div>`
+  ).join('');
+}
+
+async function loadPortfolio() {
+  const d = await api('/api/portfolio', { params: { uid } });
+  document.getElementById('pnl-total').textContent =
+    `$${(d.realized + d.unrealized).toFixed(2)}`;
+  document.getElementById('pnl-realized').textContent = `$${d.realized.toFixed(2)}`;
+  document.getElementById('pnl-unrealized').textContent = `$${d.unrealized.toFixed(2)}`;
+}
+
+async function loadWatchlist() {
+  const d = await api('/api/watchlist', { params: { uid } });
+  const el = document.getElementById('watch-list');
+  if (!d.watchlist.length) { el.innerHTML = '<div style="margin-top:8px">No tokens. Add one above.</div>'; return; }
+  el.innerHTML = d.watchlist.map(w =>
+    `<span class="pill">${w.symbol} <a style="color:#ef5350;cursor:pointer;text-decoration:none" onclick="removeWatch('${w.symbol}')">×</a></span> `
+  ).join('') + '<div style="margin-top:8px"></div>';
+}
+
+async function addWatch() {
+  const s = document.getElementById('watch-input').value.trim().toUpperCase();
+  if (!s) return;
+  await api('/api/watch', { method: 'POST', params: { uid, symbol: s } });
+  document.getElementById('watch-input').value = '';
+  loadWatchlist();
+}
+async function removeWatch(s) {
+  await api('/api/watch', { method: 'DELETE', params: { uid, symbol: s } });
+  loadWatchlist();
+}
+
+async function loadTrades() {
+  const d = await api('/api/trades', { params: { uid } });
+  const el = document.getElementById('trades-list');
+  if (!d.trades.length) { el.innerHTML = '<div style="margin-top:8px">No trades yet.</div>'; return; }
+  el.innerHTML = `
+    <table style="margin-top:8px">
+      <tr><th>#</th><th>Side</th><th>Symbol</th><th>Entry</th><th>Size</th><th>Status</th><th>Exit</th><th></th></tr>
+      ${d.trades.map(t => `
+        <tr>
+          <td>${t.id}</td>
+          <td><span class="pill ${t.side}">${t.side.toUpperCase()}</span></td>
+          <td>${t.symbol}</td>
+          <td>${t.entry_price}</td>
+          <td>${t.size}</td>
+          <td>${t.status}</td>
+          <td>${t.exit_price || '-'}</td>
+          <td>${t.status === 'open' ? `<button class="secondary" onclick="closeTrade(${t.id})">Close</button>` : ''}</td>
+        </tr>
+      `).join('')}
+    </table>`;
+}
+async function addTrade() {
+  const body = new URLSearchParams({
+    uid, symbol: tr_symbol.value.toUpperCase(), side: tr_side.value,
+    entry_price: tr_entry.value, size: tr_size.value,
+    stop_loss: tr_stop.value || '', take_profit: tr_tp.value || ''
+  });
+  await fetch('/api/trade', { method: 'POST', body });
+  loadTrades(); loadPortfolio();
+}
+async function closeTrade(id) {
+  const exit = prompt('Exit price?');
+  if (!exit) return;
+  await api('/api/close', { method: 'POST', params: { uid, tid: id, exit_price: parseFloat(exit) } });
+  loadTrades(); loadPortfolio();
+}
+
+async function loadJournal() {
+  const d = await api('/api/journal', { params: { uid } });
+  const el = document.getElementById('journal-list');
+  if (!d.journal.length) { el.innerHTML = '<div style="margin-top:8px">No notes.</div>'; return; }
+  el.innerHTML = d.journal.map(n =>
+    `<div style="margin-top:8px;border-left:2px solid #3a7afe;padding-left:8px"><strong>${n.symbol}</strong> · ${n.title}<br><span class="small">${n.body}</span></div>`
+  ).join('');
+}
+async function addJournal() {
+  const body = new URLSearchParams({
+    uid, symbol: j_symbol.value.toUpperCase(), title: j_title.value, body: j_body.value
+  });
+  await fetch('/api/journal', { method: 'POST', body });
+  j_title.value = j_body.value = ''; loadJournal();
+}
+
+loadAll();
+setInterval(loadSignals, 60000);  // refresh signals every min
+</script>
+</body>
+</html>

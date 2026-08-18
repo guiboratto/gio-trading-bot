@@ -1,20 +1,15 @@
-"""Archam API client - discover top performing wallets.
+"""Archam API client (kept for optional Pro tier use).
 
-Sign up at https://www.archam.ai/ for API key.
-Free tier: ~100 req/min. Pro tier for higher.
+If ARCHAM_API_KEY not set, all functions return empty/error gracefully.
+Real-time signals come from whales.py (free stack).
 """
 import os
 import httpx
-from typing import Optional
 
 BASE = "https://api.archam.ai"
 
 
 async def smart_money_top(limit: int = 50, chain: str = "eth") -> dict:
-    """Top wallets by PnL.
-
-    Docs: GET /v1/smart-money/wallets
-    """
     key = os.environ.get("ARCHAM_API_KEY")
     if not key:
         return {"error": "ARCHAM_API_KEY not set", "wallets": []}
@@ -32,7 +27,6 @@ async def smart_money_top(limit: int = 50, chain: str = "eth") -> dict:
 
 
 async def wallet_pnl(wallet: str, chain: str = "eth") -> dict:
-    """PnL breakdown for one wallet."""
     key = os.environ.get("ARCHAM_API_KEY")
     if not key:
         return {"error": "ARCHAM_API_KEY not set"}
@@ -49,7 +43,6 @@ async def wallet_pnl(wallet: str, chain: str = "eth") -> dict:
 
 
 async def wallet_trades(wallet: str, chain: str = "eth", days: int = 7) -> dict:
-    """Recent trades for one wallet - used for signals."""
     key = os.environ.get("ARCHAM_API_KEY")
     if not key:
         return {"error": "ARCHAM_API_KEY not set", "trades": []}
