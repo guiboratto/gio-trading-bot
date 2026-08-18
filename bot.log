@@ -1,27 +1,17 @@
-2026-08-18 21:30:06,560 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-08-18 21:30:06,560 INFO gio: Bot starting...
-2026-08-18 21:30:06,707 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getMe "HTTP/1.1 200 OK"
-2026-08-18 21:30:06,745 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/deleteWebhook "HTTP/1.1 200 OK"
-2026-08-18 21:30:06,746 INFO apscheduler.scheduler: Added job "_kick_monitor" to job store "default"
-2026-08-18 21:30:06,746 INFO apscheduler.scheduler: Scheduler started
-2026-08-18 21:30:06,746 INFO telegram.ext.Application: Application started
-2026-08-18 21:30:11,564 INFO apscheduler.scheduler: Removed job f63fc967736847b3a2c83789d9a5f47b
-2026-08-18 21:30:11,564 INFO apscheduler.executors.default: Running job "_kick_monitor (trigger: date[2026-08-18 18:30:11 UTC], next run at: 2026-08-18 18:30:11 UTC)" (scheduled at 2026-08-18 18:30:11.559917+00:00)
-2026-08-18 21:30:11,578 WARNING gio.whales: Archam whales error: ARCHAM_API_KEY not set
-2026-08-18 21:30:11,578 INFO apscheduler.executors.default: Job "_kick_monitor (trigger: date[2026-08-18 18:30:11 UTC], next run at: 2026-08-18 18:30:11 UTC)" executed successfully
-2026-08-18 21:30:16,900 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:30:26,971 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:30:37,034 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:30:47,085 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:30:57,128 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:07,166 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:17,208 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:27,277 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:37,317 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:47,364 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:31:57,404 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:32:07,496 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:32:17,537 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:32:27,575 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:32:37,614 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
-2026-08-18 21:32:47,653 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAFETVnXEKshAsN-QtYeIWC1cnNhaBEVwxk/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 22:12:50,873 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-08-18 22:12:50,873 INFO gio: Bot starting...
+2026-08-18 22:12:51,061 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getMe "HTTP/1.1 200 OK"
+2026-08-18 22:12:51,099 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/deleteWebhook "HTTP/1.1 200 OK"
+2026-08-18 22:12:51,100 INFO apscheduler.scheduler: Added job "_kick_monitor" to job store "default"
+2026-08-18 22:12:51,100 INFO apscheduler.scheduler: Scheduler started
+2026-08-18 22:12:51,101 INFO telegram.ext.Application: Application started
+2026-08-18 22:12:55,877 INFO apscheduler.scheduler: Removed job 68e7c00ff97942228c9dc1113df8c809
+2026-08-18 22:12:55,877 INFO apscheduler.executors.default: Running job "_kick_monitor (trigger: date[2026-08-18 19:12:55 UTC], next run at: 2026-08-18 19:12:55 UTC)" (scheduled at 2026-08-18 19:12:55.872822+00:00)
+2026-08-18 22:12:55,896 INFO apscheduler.executors.default: Job "_kick_monitor (trigger: date[2026-08-18 19:12:55 UTC], next run at: 2026-08-18 19:12:55 UTC)" executed successfully
+2026-08-18 22:12:56,034 INFO httpx: HTTP Request: GET https://api.llama.fi/protocols "HTTP/1.1 200 OK"
+2026-08-18 22:12:56,396 INFO gio: monitor: signals=5 fresh=5
+2026-08-18 22:13:01,244 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 22:13:11,284 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 22:13:21,325 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 22:13:31,363 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getUpdates "HTTP/1.1 200 OK"
+2026-08-18 22:13:41,401 INFO httpx: HTTP Request: POST https://api.telegram.org/bot8572006198:AAHeh-mu6Z95TWvFSUcoTmicPT4t1BlFlgs/getUpdates "HTTP/1.1 200 OK"

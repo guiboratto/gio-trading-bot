@@ -48,11 +48,11 @@ class BinanceClient:
             sig = self.private_key.sign(
                 query.encode(),
                 padding.PKCS1v15(),
-                hashlib.SHA256(),
+                hashlib.sha256(),
             )
             return _b64url(sig)
         else:
-            return hmac.new(self.secret, query.encode(), hashlib.SHA256).hexdigest()
+            return hmac.new(self.secret, query.encode(), hashlib.sha256).hexdigest()
 
     def _request(self, method: str, path: str, params: dict | None = None,
                  signed: bool = True) -> dict:

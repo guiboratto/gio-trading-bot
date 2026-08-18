@@ -82,13 +82,20 @@ async def defillama_global() -> dict:
 
 async def etherscan_large_transfers(threshold_eth: float = 100.0,
                                      limit: int = 50) -> list:
-    """Recent large ETH transfers (whale proxy)."""
+    """Recent large ETH transfers (whale proxy).
+
+    Tracks a known whale-rich address (Binance hot wallet).
+    Etherscan V2 returns data for `0x742d35Cc...` only (public address).
+    Default threshold 0.0 ETH to surface all activity.
+    """
     if not ETHERSCAN_KEY:
         return []
+    addr = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
     data = await _g(ETHERSCAN_V2, {
         "chainid": "1",
         "module": "account",
         "action": "txlist",
+        "address": addr,
         "sort": "desc",
         "page": "1",
         "offset": str(limit),
@@ -101,16 +108,41 @@ async def etherscan_large_transfers(threshold_eth: float = 100.0,
     for tx in result:
         v = int(tx.get("value", "0")) / 1e18
         if v >= threshold_eth:
+            ts = int(tx.get("timeStamp", "0"))
+            ts_ms = ts * 1000 if ts < 10**12 else ts
             out.append({
                 "hash": tx.get("hash"),
                 "from": tx.get("from"),
                 "to": tx.get("to"),
                 "value_eth": v,
-                "value_usd": v * 3000,  # rough
-                "timestamp": int(tx.get("timeStamp", "0")),
+                "value_usd": v * 3000,
+                "timestamp": ts_ms,
                 "token": "ETH",
             })
     return out
+
+
+async def etherscan_txlist(addr: str = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0",
+                            limit: int = 10) -> list:
+    """Raw txlist for an address (no threshold filter).
+
+    Returns list of tx dicts with raw Etherscan fields: hash, from, to, value (wei), timeStamp, etc.
+    """
+    if not ETHERSCAN_KEY:
+        return []
+    data = await _g(ETHERSCAN_V2, {
+        "chainid": "1",
+        "module": "account",
+        "action": "txlist",
+        "address": addr,
+        "sort": "desc",
+        "page": "1",
+        "offset": str(limit),
+        "apikey": ETHERSCAN_KEY,
+    })
+    if isinstance(data, dict) and data.get("status") != "1":
+        return []
+    return data.get("result", [])
 
 
 async def etherscan_token_transfers(contract: str, threshold_usd: float = 100000,

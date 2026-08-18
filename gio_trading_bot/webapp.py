@@ -73,8 +73,36 @@ async def signals():
 
 @app.get("/api/whales")
 async def top_whales():
-    ws = await whales.discover_whales(limit=20)
-    return {"whales": ws}
+    txs = await whales.etherscan_txlist(addr=os.environ.get("WHALE_WATCH_ADDRESS",
+        "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"), limit=10)
+    norm = []
+    for tx in txs:
+        norm.append({
+            "hash": tx.get("hash"),
+            "from": tx.get("from"),
+            "to": tx.get("to"),
+            "value": str(int(tx.get("value", "0")) / 1e18),
+            "timestamp": int(tx.get("timeStamp", "0")),
+        })
+    return {"txs": norm}
+
+
+@app.get("/api/account")
+async def binance_account_api():
+    from . import binance_client
+    from dotenv import load_dotenv
+    load_dotenv()
+    KEY = os.environ.get("BINANCE_API_KEY", "")
+    SEC = os.environ.get("BINANCE_API_SECRET", "")
+    if not KEY or not SEC:
+        return {"error": "Binance not configured"}
+    client = binance_client.BinanceClient(KEY, SEC, testnet=True, is_rsa=False)
+    # httpx via wrapper, not async - use sync from async (run in thread)
+    import asyncio
+    r = await asyncio.to_thread(client.account)
+    if "error" in r:
+        return r
+    return {"balances": [b for b in r.get("balances", []) if float(b.get("free", 0)) > 0]}
 
 
 @app.get("/api/portfolio")
