@@ -13,6 +13,7 @@ import asyncio
 import logging
 import hashlib
 import secrets
+from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -23,7 +24,7 @@ from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler,
     CallbackQueryHandler, ContextTypes, filters,
 )
-from . import db, whales, archam, market_data, advisor as adv
+from . import db, whales, archam, market_data, advisor as adv, binance_client
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -279,6 +280,9 @@ async def on_text(update, ctx):
     if pending == "binance_key":
         ctx.user_data["awaiting"] = None
         return await _save_binance_key(update, ctx, text)
+    if pending == "binance_api_key":
+        ctx.user_data["awaiting"] = None
+        return await _save_binance_api_key(update, ctx, text)
     if pending == "binance_secret":
         ctx.user_data["awaiting"] = None
         return await _save_binance_secret(update, ctx, text)
@@ -454,10 +458,24 @@ async def _settings_menu(update):
 async def _settings_router(update, ctx, data):
     q = update.callback_query
     if data == "set:binance":
-        ctx.user_data["awaiting"] = "binance_key"
+        uid = q.from_user.id
+        # generate keypair on user's machine
+        try:
+            priv_path, pub_pem = binance_client.generate_rsa_keypair(uid)
+            db.save_api_key(uid, "binance_pem_path", priv_path)
+            db.save_api_key(uid, "binance_pub_pem", pub_pem)
+            pub_path = priv_path.replace(".pem", ".pub.pem")
+            Path(pub_path).write_text(pub_pem)
+        except Exception as e:
+            await q.edit_message_text(f"Keygen failed: {e}")
+            return
+        ctx.user_data["awaiting"] = "binance_api_key"
         await q.edit_message_text(
-            "Send your Binance API key (it will be encrypted).\n"
-            "Or /cancel to abort."
+            f"RSA-2048 keypair created:\n"
+            f"  Private: {priv_path}\n"
+            f"  Public:  {pub_path}\n\n"
+            f"Upload the .pub.pem to Binance -> API Management -> Create key.\n"
+            f"Then send me your Binance API key."
         )
     elif data == "set:eth":
         ctx.user_data["awaiting"] = "etherscan_key"
@@ -623,6 +641,34 @@ async def _save_binance_key(update, ctx, key):
         "It will be hashed (not reversible).\n"
         "Or /cancel to abort."
     )
+
+
+async def _save_binance_api_key(update, ctx, key):
+    """Store Binance API key + try connection."""
+    uid = update.effective_user.id
+    db.save_api_key(uid, "binance_key", key, encrypted=False)
+    db.save_api_key(uid, "binance_configured", "1", encrypted=False)
+    # test ping with stored PEM
+    pem_path = db.get_api_key(uid, "binance_pem_path")
+    if not pem_path or not Path(pem_path).exists():
+        await update.message.reply_text(
+            "Key saved but no private key on disk. /settings -> Binance again."
+        )
+        return
+    try:
+        client = binance_client.BinanceClient(key, pem_path, testnet=True, is_rsa=True)
+        ping = client.ping()
+        acct = client.account()
+        if "error" in acct:
+            await update.message.reply_text(
+                f"Saved. Testnet ping: {ping}\nAccount: {acct.get('error', 'unknown')}"
+            )
+        else:
+            await update.message.reply_text(
+                f"Saved. Testnet OK.\nCan trade: {len(acct.get('balances', []))} assets visible."
+            )
+    except Exception as e:
+        await update.message.reply_text(f"Saved but test failed: {e}")
 
 
 async def _save_binance_secret(update, ctx, secret):
