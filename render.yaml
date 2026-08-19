@@ -1,10 +1,10 @@
 services:
   - type: web
     name: gio-trading-bot
-    runtime: python
+    runtime: docker
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn gio_trading_bot.render_main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: TELEGRAM_BOT_TOKEN
         sync: false
