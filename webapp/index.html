@@ -9,106 +9,224 @@
     * { box-sizing: border-box; }
     body { font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
            margin: 0; padding: 0; background: #0e0f12; color: #e8eaed; }
-    .app { max-width: 720px; margin: 0 auto; padding: 16px; }
-    h1 { font-size: 22px; margin: 0 0 4px; }
-    h2 { font-size: 13px; margin: 24px 0 8px; color: #9aa0a6; text-transform: uppercase; letter-spacing: 0.06em; }
-    .card { background: #1a1c20; border-radius: 12px; padding: 14px; margin: 8px 0; }
-    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .app { max-width: 720px; margin: 0 auto; padding: 14px; padding-bottom: 80px; }
+    h1 { font-size: 22px; margin: 0 0 2px; }
     .small { font-size: 12px; color: #9aa0a6; }
-    .pnl-big { font-size: 28px; font-weight: 700; }
-    .signal { padding: 8px; border-left: 3px solid #3a7afe; background: #1a1c20; margin: 4px 0; border-radius: 0 8px 8px 0; }
-    .loading { color: #9aa0a6; padding: 16px; }
+    h2 { font-size: 12px; margin: 22px 0 6px; color: #9aa0a6; text-transform: uppercase; letter-spacing: 0.06em; }
+    .card { background: #1a1c20; border-radius: 12px; padding: 12px; margin: 8px 0; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .signal { padding: 10px; border-left: 3px solid #3a7afe; background: #1a1c20; margin: 6px 0; border-radius: 0 8px 8px 0; }
+    .signal.up { border-left-color: #4caf50; }
+    .signal.down { border-left-color: #ef5350; }
+    .why { background: #1f2937; border-radius: 8px; padding: 8px; margin-top: 6px; font-size: 12px; }
+    .why b { color: #4caf50; }
+    .why.warn b { color: #fbbf24; }
+    .why.bad b { color: #ef5350; }
+    .loading { color: #9aa0a6; padding: 12px; }
+    .err { color: #ef5350; padding: 6px 0; }
+    .pos { color: #4caf50; font-weight: 600; }
+    .neg { color: #ef5350; font-weight: 600; }
+    .tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: #111418; border-top: 1px solid #2a2d33;
+              display: flex; padding: 6px 0; z-index: 10; }
+    .tabbar button { flex: 1; background: none; border: 0; color: #9aa0a6; padding: 6px; font: inherit; }
+    .tabbar button.active { color: #3a7afe; }
+    .tabbar .ico { font-size: 18px; }
+    .filter { margin: 8px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter button { background: #2a2d33; color: #e8eaed; border: 0; border-radius: 999px; padding: 4px 10px; font: 12px; }
+    .filter button.on { background: #3a7afe; color: #fff; }
+    .pnl-big { font-size: 24px; font-weight: 700; }
+    .meta { font-size: 11px; color: #5a6068; }
   </style>
 </head>
 <body>
 <div class="app">
   <h1>🐋 GIO Whale Tracker</h1>
-  <div class="small">Signals · Whales · Testnet Trading</div>
+  <div class="small" id="user-info">Signals · Whales · Testnet</div>
 
-  <h2>Live Signals</h2>
-  <div class="card" id="signals"><div class="loading">Loading...</div></div>
+  <h2>Sentiment & Market</h2>
+  <div class="card" id="sentiment"><div class="loading">Loading…</div></div>
 
-  <h2>Whales (ETH flow)</h2>
-  <div class="card" id="whales"><div class="loading">Loading...</div></div>
+  <h2>Live Signals <span class="small" id="src-count"></span></h2>
+  <div class="filter" id="filter-row">
+    <button data-min="500000" class="on">All $500K+</button>
+    <button data-min="100000">$100K+</button>
+    <button data-min="0">All</button>
+  </div>
+  <div id="signals"><div class="loading">Loading…</div></div>
+
+  <h2>Whales (recent ETH flow)</h2>
+  <div id="whales"><div class="loading">Loading…</div></div>
 
   <h2>Binance Testnet</h2>
-  <div class="card" id="account"><div class="loading">Loading...</div></div>
+  <div class="card" id="account"><div class="loading">Loading…</div></div>
 
-  <h2>Fear & Greed</h2>
-  <div class="card" id="sentiment"><div class="loading">Loading...</div></div>
+  <h2>Live price</h2>
+  <div class="card" id="price"><div class="loading">Loading…</div></div>
+
+  <h2>Quick trade</h2>
+  <div class="card">
+    <div class="small">Binance testnet /testnet.binance.vision — paper only.</div>
+    <div class="row" style="margin-top:6px">
+      <input id="t-sym" placeholder="BTCUSDT" style="flex:0 0 100px">
+      <input id="t-qty" placeholder="0.001" style="flex:1">
+      <button onclick="trade('BUY')">Buy</button>
+      <button onclick="trade('SELL')">Sell</button>
+    </div>
+    <div id="t-res" class="small"></div>
+  </div>
+</div>
+
+<div class="tabbar">
+  <button class="active" data-tab="home"><div class="ico">📊</div>Home</button>
+  <button data-tab="signals"><div class="ico">📡</div>Signals</button>
+  <button data-tab="whales"><div class="ico">🐋</div>Whales</button>
+  <button data-tab="trade"><div class="ico">💱</div>Trade</button>
+  <button data-tab="settings"><div class="ico">⚙️</div>More</button>
 </div>
 
 <script>
 const tg = window.Telegram?.WebApp;
 const params = new URLSearchParams(location.search);
 const uid = tg?.initDataUnsafe?.user?.id || parseInt(params.get('uid')) || 0;
-tg?.ready();
-tg?.expand();
+if (tg) { tg.ready(); tg.expand(); }
+document.getElementById('user-info').textContent = `User ${uid} · Signals · Whales · Testnet`;
 
-async function load(path) {
+const STATE = { minUsd: 500000, all: null, lastTrade: 0 };
+
+async function api(path) {
+  try { return await (await fetch(path)).json(); }
+  catch (e) { return { error: String(e) }; }
+}
+
+function fmtUsd(n) {
+  if (!n) return '?';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + (n/1e3).toFixed(1) + 'K';
+  return '$' + n.toFixed(0);
+}
+
+function fmtEta(ts) {
+  if (!ts) return '';
+  const d = new Date(ts > 1e12 ? ts : ts * 1000);
+  return d.toLocaleString();
+}
+
+function why(sig) {
+  // simple why-buy logic
+  const reasons = [];
+  if (sig.amount_usd > 5e6) reasons.push(`large flow (${fmtUsd(sig.amount_usd)})`);
+  if (sig.change_pct && sig.change_pct > 50) reasons.push(`+${sig.change_pct.toFixed(0)}% TVL spike`);
+  if (sig.sentiment && sig.sentiment < 30) reasons.push('extreme fear (contrarian buy)');
+  if (sig.sentiment && sig.sentiment > 70) reasons.push('extreme greed (take profits)');
+  if (reasons.length === 0) reasons.push('notable movement worth watching');
+  const cls = reasons[0].includes('fear') || reasons[0].includes('sell') ? 'bad' : 'warn';
+  return `<div class="why ${cls}">why: <b>${reasons.join(' · ')}</b></div>`;
+}
+
+async function loadSignals() {
+  const d = await api('/api/signals');
+  const all = d.signals || [];
+  STATE.all = all;
+  document.getElementById('src-count').textContent = `${all.length} events`;
+  const filtered = all.filter(s => (s.amount_usd || 0) >= STATE.minUsd);
+  if (d.sentiment && d.sentiment.value) {
+    document.getElementById('sentiment').innerHTML =
+      `<div class="row"><div class="pnl-big">${d.sentiment.value}</div><div class="small">${d.sentiment.classification || ''}</div></div>`;
+  } else {
+    document.getElementById('sentiment').innerHTML = '<div class="small">Sentiment n/a</div>';
+  }
+  const el = document.getElementById('signals');
+  if (filtered.length === 0) {
+    el.innerHTML = '<div class="small">No signals above threshold. Lower filter.</div>';
+    return;
+  }
+  el.innerHTML = filtered.slice(0, 12).map(s => {
+    const dir = s.direction || '';
+    const cls = dir.includes('up') || dir === 'BUY' ? 'up' : (dir.includes('down') || dir === 'SELL' ? 'down' : '');
+    const ts = s.timestamp ? new Date(s.timestamp > 1e12 ? s.timestamp : s.timestamp * 1000) : null;
+    const ago = ts ? Math.round((Date.now() - ts.getTime()) / 60000) + 'm ago' : '';
+    return `<div class="signal ${cls}">
+      <b>${s.asset || '?'}</b> <span class="small">${s.source} · ${dir}</span><br>
+      <b>${fmtUsd(s.amount_usd)}</b> <span class="meta">${ago}</span>
+      ${why(s)}
+    </div>`;
+  }).join('');
+}
+
+async function loadWhales() {
+  const d = await api('/api/whales');
+  const el = document.getElementById('whales');
+  if (d.error) { el.innerHTML = `<div class="err">${d.error}</div>`; return; }
+  if (!d.txs || d.txs.length === 0) { el.innerHTML = '<div class="small">No recent tx</div>'; return; }
+  el.innerHTML = d.txs.slice(0, 8).map(tx => {
+    const v = parseFloat(tx.value).toFixed(4);
+    const ts = tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleTimeString() : '';
+    return `<div class="signal">
+      <b>${v} ETH</b> <span class="small">${ts}</span><br>
+      <span class="small">${(tx.from||'').slice(0,12)}… → ${(tx.to||'').slice(0,12)}…</span>
+    </div>`;
+  }).join('');
+}
+
+async function loadAccount() {
+  const d = await api('/api/account');
+  const el = document.getElementById('account');
+  if (d.error) {
+    el.innerHTML = `<div class="err">${d.error}</div>
+      <div class="small">Trade locally: <code>python3 -m gio_trading_bot.webhook</code></div>`;
+    return;
+  }
+  if (!d.balances || d.balances.length === 0) { el.innerHTML = '<div class="small">No balances</div>'; return; }
+  el.innerHTML = d.balances.slice(0, 6).map(b =>
+    `<div class="row"><b>${b.asset}</b><span class="small">free ${b.free}</span></div>`
+  ).join('');
+}
+
+async function loadPrice() {
+  const d = await api('/api/price/BTC');
+  const el = document.getElementById('price');
+  if (d.error || !d.price) { el.innerHTML = `<div class="err">${d.error || 'no data'}</div>`; return; }
+  el.innerHTML = `<div class="pnl-big">${d.price}</div>`;
+}
+
+async function trade(side) {
+  const sym = (document.getElementById('t-sym').value || 'BTCUSDT').toUpperCase();
+  const qty = parseFloat(document.getElementById('t-qty').value || '0');
+  if (!qty) return;
+  STATE.lastTrade = Date.now();
+  document.getElementById('t-res').textContent = 'Submitting…';
   try {
-    const r = await fetch(path);
-    return await r.json();
-  } catch (e) { return { error: String(e) }; }
-}
-
-async function loadAll() {
-  const [sig, whales, account] = await Promise.all([
-    load('/api/signals'),
-    load('/api/whales'),
-    load('/api/account'),
-  ]);
-
-  // signals
-  const sigEl = document.getElementById('signals');
-  if (sig.error) {
-    sigEl.innerHTML = `<div class="small">err: ${sig.error}</div>`;
-  } else if (sig.signals && sig.signals.length) {
-    sigEl.innerHTML = sig.signals.slice(0, 6).map(s => {
-      const usd = Math.round(s.amount_usd || 0).toLocaleString();
-      const extra = s.change_pct ? ` <span class="small">(${s.change_pct.toFixed(1)}%)</span>` : '';
-      return `<div class="signal"><strong>${s.asset || '?'}</strong> · ${s.source} · ${s.direction} · $${usd}${extra}</div>`;
-    }).join('') + (sig.sentiment ? `<div class="small" style="margin-top:8px">F&G: ${sig.sentiment.value} (${sig.sentiment.classification})</div>` : '');
-  } else {
-    sigEl.innerHTML = `<div class="small">${sig.note || 'No signals'}</div>`;
-  }
-
-  // whales
-  const wEl = document.getElementById('whales');
-  if (whales.error) {
-    wEl.innerHTML = `<div class="small">err: ${whales.error}</div>`;
-  } else if (whales.txs && whales.txs.length) {
-    wEl.innerHTML = whales.txs.slice(0, 5).map(tx => {
-      const v = parseFloat(tx.value).toFixed(4);
-      return `<div class="small">${v} ETH<br>${tx.from.slice(0,10)}... → ${tx.to.slice(0,10)}...</div>`;
-    }).join('');
-  } else {
-    wEl.innerHTML = `<div class="small">No recent tx</div>`;
-  }
-
-  // account
-  const aEl = document.getElementById('account');
-  if (account.error) {
-    aEl.innerHTML = `<div class="small">err: ${account.error}</div>`;
-  } else if (account.balances) {
-    aEl.innerHTML = account.balances.slice(0, 6).map(b =>
-      `<div class="row"><strong>${b.asset}</strong><span class="small">free ${b.free}</span></div>`
-    ).join('') || '<div class="small">No non-zero balances</div>';
-  } else {
-    aEl.innerHTML = '<div class="small">No data</div>';
-  }
-
-  // sentiment
-  const sEl = document.getElementById('sentiment');
-  if (sig.sentiment) {
-    sEl.innerHTML = `<div class="pnl-big">${sig.sentiment.value}</div><div class="small">${sig.sentiment.classification}</div>`;
-  } else {
-    sEl.innerHTML = '<div class="small">n/a</div>';
+    const r = await fetch(`/api/trade?side=${side}&symbol=${sym}&qty=${qty}`, { method: 'POST' });
+    const d = await r.json();
+    document.getElementById('t-res').textContent = d.error
+      ? 'Error: ' + d.error
+      : `OK · orderId=${d.orderId} status=${d.status}`;
+  } catch (e) {
+    document.getElementById('t-res').textContent = 'Error: ' + e;
   }
 }
+
+document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabbar button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  // For now all tabs just refresh - simple implementation
+  loadSignals(); loadWhales(); loadAccount(); loadPrice();
+}));
+
+document.querySelectorAll('.filter button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.filter button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  STATE.minUsd = parseInt(b.dataset.min);
+  loadSignals();
+}));
 
 loadAll();
-setInterval(loadAll, 60000);
+async function loadAll() {
+  await Promise.all([loadSignals(), loadWhales(), loadAccount(), loadPrice()]);
+}
+loadAll();
+setInterval(loadAll, 30000);
 </script>
 </body>
 </html>

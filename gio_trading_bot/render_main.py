@@ -409,6 +409,59 @@ async def api_price(symbol: str):
     return {"price": coin_price(symbol.upper())}
 
 
+@app.post("/api/trade")
+async def api_trade(side: str, symbol: str, qty: float):
+    """Testnet market order. Returns Binance error (HTTP 451) on Render datacenter."""
+    if not BINANCE_KEY or not BINANCE_SEC:
+        return {"error": "Binance keys not set"}
+    r = binance_signed("POST", "/api/v3/order", {
+        "symbol": symbol.upper(), "side": side.upper(), "type": "MARKET",
+        "quantity": str(qty)
+    })
+    if "error" in r:
+        return r
+    return r
+
+
+EVENT_LOG = []  # ring buffer, last 200 events
+
+@app.get("/api/debug/log")
+async def api_debug_log(limit: int = 50):
+    return {"events": EVENT_LOG[-limit:]}
+
+
+@app.get("/api/market-overview")
+async def api_market_overview():
+    """Multi-source overview: Coingecko top movers + DefiLlama + sentiment."""
+    overview = {"coingecko_top_movers": [], "defillama_movers": [], "sentiment": None}
+    # Coingecko top movers
+    try:
+        url = f"{COINGECKO}/coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=10&page=1&sparkline=false&price_change_percentage=24h"
+        if COINGECKO_KEY:
+            url += f"&x_cg_demo_api_key={COINGECKO_KEY}"
+        req = urllib.request.Request(url, headers={"User-Agent": "gio-bot/1.0"})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            data = json.loads(r.read())
+        overview["coingecko_top_movers"] = [{
+            "symbol": c.get("symbol", "").upper(),
+            "name": c.get("name", ""),
+            "price": c.get("current_price"),
+            "change_24h_pct": c.get("price_change_percentage_24h"),
+            "market_cap": c.get("market_cap"),
+            "volume_24h": c.get("total_volume"),
+        } for c in data[:10]]
+    except Exception as e:
+        log.error("coingecko movers: %s", e)
+    overview["defillama_movers"] = [{
+        "name": m.get("name"),
+        "category": m.get("category"),
+        "tvl_usd": m.get("tvl"),
+        "change_1d_pct": m.get("change_1d"),
+    } for m in defillama_movers(n=5)]
+    overview["sentiment"] = fear_greed()
+    return overview
+
+
 @app.get("/telegram")
 async def telegram_webhook_root():
     return {"status": "ok", "msg": "send POST"}
@@ -427,6 +480,8 @@ async def telegram_webhook(request: Request):
         chat_id = m["chat"]["id"]
         text = m.get("text", "")
         log.info("MSG user=%s text=%r", uid, text[:80])
+        EVENT_LOG.append({"ts": int(time.time()), "type": "msg", "uid": uid, "text": text[:80]})
+        EVENT_LOG[:] = EVENT_LOG[-200:]
         if text.startswith("/start"): cmd_start(uid, chat_id)
         elif text.startswith("/menu"): cmd_menu(chat_id)
         elif text.startswith("/signals"): cmd_signals(chat_id)
@@ -441,6 +496,8 @@ async def telegram_webhook(request: Request):
             send(chat_id, f"Note saved: {text[:100]}")
     elif "callback_query" in d:
         c = d["callback_query"]
+        EVENT_LOG.append({"ts": int(time.time()), "type": "cb", "data": c.get("data", "")})
+        EVENT_LOG[:] = EVENT_LOG[-200:]
         on_callback(c["from"]["id"], c["message"]["chat"]["id"],
                     c["message"]["message_id"], c["id"], c.get("data", ""))
     return {"ok": True}
