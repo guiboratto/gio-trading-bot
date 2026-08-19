@@ -436,7 +436,7 @@ async def api_market_overview():
     overview = {"coingecko_top_movers": [], "defillama_movers": [], "sentiment": None}
     # Coingecko top movers
     try:
-        url = f"{COINGECKO}/coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=10&page=1&sparkline=false&price_change_percentage=24h"
+        url = f"{COINGECKO}/coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=10&page=1&sparkline=false"
         if COINGECKO_KEY:
             url += f"&x_cg_demo_api_key={COINGECKO_KEY}"
         req = urllib.request.Request(url, headers={"User-Agent": "gio-bot/1.0"})
