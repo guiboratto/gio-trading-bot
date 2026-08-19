@@ -401,7 +401,7 @@ async def api_account():
     r = binance_signed("GET", "/api/v3/account")
     if "error" in r:
         return r
-    return {"balances": [b for b in r.get("balances", []) if float(b.get("free", 0)) > 0]}
+    return {"error": "Binance API blocked on Render datacenter. Run /home/guiboratto/projects/gio-trading-bot/webhook.py locally for trading."}
 
 
 @app.get("/api/price/{symbol}")
