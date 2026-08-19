@@ -336,7 +336,7 @@ def on_callback(uid, chat_id, msg_id, cb_id, data):
             edit("GIO menu:", chat_id, msg_id, reply_markup=main_menu())
 
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
@@ -415,7 +415,7 @@ async def telegram_webhook_root():
 
 
 @app.post("/telegram")
-async def telegram_webhook(request):
+async def telegram_webhook(request: Request):
     try:
         d = await request.json()
     except Exception:
