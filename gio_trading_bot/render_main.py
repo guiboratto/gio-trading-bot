@@ -245,7 +245,7 @@ def help_text():
             "/price SYM - live price\n/settings - status\n/help")
 
 
-def cmd_start(uid, chat_id):
+async def cmd_start(uid, chat_id):
     ONBOARD[uid] = {"step": 0, "lang": "en"}
     send(chat_id, "GIO - Whale Tracker\n\nLive signals, on-chain ETH activity, Binance testnet trading.\n\nChoose language:",
          reply_markup=onboarding_kb(0))
@@ -471,8 +471,19 @@ async def telegram_webhook_root():
 async def telegram_webhook(request: Request):
     try:
         d = await request.json()
-    except Exception:
+    except Exception as e:
+        log.error("json parse: %s", e)
         return {"ok": True}
+    try:
+        await _process_update(d)
+    except Exception as e:
+        log.exception("update handler err: %s", e)
+        EVENT_LOG.append({"ts": int(time.time()), "type": "err", "err": str(e)[:200]})
+        EVENT_LOG[:] = EVENT_LOG[-200:]
+    return {"ok": True}
+
+
+async def _process_update(d):
     log.info("UPDATE: %s", str(d)[:200])
     if "message" in d:
         m = d["message"]
